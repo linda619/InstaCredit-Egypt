@@ -1,0 +1,2460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>InstaCredit Egypt - Class Credit Transfer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #6200ee;
+            --primary-dark: #3700b3;
+            --primary-light: #bb86fc;
+            --secondary-color: #03dac6;
+            --danger-color: #cf6679;
+            --success-color: #28a745;
+            --text-color: #121212;
+            --bg-color: #f5f5f5;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .balance {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-secondary {
+            background-color: #f1f3f4;
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e8eaed;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d33426;
+        }
+
+        .centered {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #qrCodeContainer {
+            margin: 20px 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .form-label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .transaction {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .transaction-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .transaction-icon {
+            margin-right: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .received {
+            background-color: var(--success-color);
+        }
+
+        .sent {
+            background-color: var(--primary-color);
+        }
+
+        .transaction-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .transaction-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .transaction-date {
+            font-size: 12px;
+            color: #70757a;
+        }
+
+        .transaction-amount {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .transaction-amount.received {
+            color: var(--success-color);
+        }
+
+        .transaction-amount.sent {
+            color: var(--danger-color);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .nav-tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px 0;
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px solid var(--border-color);
+            font-size: 16px;
+            font-weight: bold;
+            color: #70757a;
+            cursor: pointer;
+        }
+
+        .nav-tab.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        #qrCodeCamera {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 15px;
+            background-color: #000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            margin: 15% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            animation: modalopen 0.4s;
+        }
+
+        @keyframes modalopen {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: var(--text-color);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 15px 0;
+            border-radius: 8px;
+            margin: 0 5px;
+            background-color: #f1f3f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .action-btn:hover {
+            background-color: #e8eaed;
+        }
+
+        .action-btn i {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+
+        .action-text {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+        }
+
+        .notification.success {
+            background-color: var(--success-color);
+        }
+
+        .notification.error {
+            background-color: var(--danger-color);
+        }
+
+        #loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: #70757a;
+        }
+
+        .nav-item.active i {
+            color: var(--primary-color);
+        }
+
+        .nav-item-text {
+            font-size: 12px;
+            color: #70757a;
+        }
+
+        .nav-item.active .nav-item-text {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* Login/Register styling */
+        .auth-card {
+            padding: 30px;
+            max-width: 400px;
+            margin: 50px auto;
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            color: var(--primary-color);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #70757a;
+        }
+
+        .auth-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Make room for bottom nav */
+        .content-wrapper {
+            padding-bottom: 70px;
+        }
+        
+        /* Transaction cancellation styles */
+        .transaction {
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .transaction:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .transaction-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        .cancel-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .cancel-btn:hover {
+            opacity: 0.8;
+        }
+        
+        .status-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 8px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .status-badge.cancelled {
+            background-color: var(--danger-color);
+        }
+        
+        .transaction-amount.cancelled {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+        
+        /* Detail styles */
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: var(--text-color);
+        }
+        
+        .detail-value {
+            text-align: right;
+        }
+        
+        .status-completed {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .status-cancelled {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+        
+        /* Manual QR Entry styles */
+        #manualQrEntrySection {
+            border-top: 1px solid var(--border-color);
+            margin-top: 20px;
+            padding-top: 15px;
+        }
+        
+        #manualQrInput {
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            #qrCodeCamera {
+                height: 250px;
+            }
+        }
+    </style>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+    
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyDs5ItyHsNDiPXGLSJcH0GDKUzdeSSOFA8",
+        authDomain: "instacredit-egypt.firebaseapp.com",
+        projectId: "instacredit-egypt",
+        storageBucket: "instacredit-egypt.firebasestorage.app",
+        messagingSenderId: "99206384979",
+        appId: "1:99206384979:web:78d943bc7ecd173543a5a6",
+        measurementId: "G-630QYYWVBS"
+      };
+    
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
+</head>
+<body>
+    <!-- App Loading Spinner -->
+    <div id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Authentication Screen -->
+    <div id="authScreen" class="screen active">
+        <div class="container">
+            <div class="card auth-card">
+                <div class="auth-logo">
+                    <i class="fas fa-exchange-alt"></i> InstaCredit Egypt
+                </div>
+                <div id="loginForm">
+                    <div class="form-group">
+                        <label for="loginUsername" class="form-label">Username</label>
+                        <input type="text" id="loginUsername" class="form-control" placeholder="Enter your username">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword" class="form-label">Password</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password">
+                    </div>
+                    <button id="loginBtn" class="btn btn-primary">Login</button>
+                    <div class="auth-footer">
+                        Don't have an account? <span id="showRegisterBtn" class="auth-link">Register</span>
+                    </div>
+                </div>
+
+                <div id="registerForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="registerUsername" class="form-label">Username</label>
+                        <input type="text" id="registerUsername" class="form-control" placeholder="Choose a username">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword" class="form-label">Password</label>
+                        <input type="password" id="registerPassword" class="form-control" placeholder="Choose a password">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerFullName" class="form-label">Full Name</label>
+                        <input type="text" id="registerFullName" class="form-control" placeholder="Enter your full name">
+                    </div>
+                    <button id="registerBtn" class="btn btn-primary">Register</button>
+                    <div class="auth-footer">
+                        Already have an account? <span id="showLoginBtn" class="auth-link">Login</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Screen -->
+    <div id="appScreen" class="screen">
+        <div class="container content-wrapper">
+            <!-- Header with User Info -->
+            <div class="header">
+                <div class="logo">
+                    <i class="fas fa-exchange-alt"></i> InstaCredit
+                </div>
+                <div class="user-info">
+                    <div class="avatar" id="userAvatar">U</div>
+                    <div class="balance">
+                        <span id="userBalance">0</span> EGP
+                    </div>
+                </div>
+            </div>
+
+            <!-- Home Screen -->
+            <div id="homeTab" class="tab-content active">
+                <!-- User Card -->
+                <div class="card">
+                    <div class="card-title">Hello, <span id="userName">User</span>!</div>
+                    <div class="actions">
+                        <div class="action-btn" id="sendBtn">
+                            <i class="fas fa-paper-plane"></i>
+                            <span class="action-text">Send</span>
+                        </div>
+                        <div class="action-btn" id="receiveBtn">
+                            <i class="fas fa-qrcode"></i>
+                            <span class="action-text">Receive</span>
+                        </div>
+                        <div class="action-btn" id="scanBtn">
+                            <i class="fas fa-camera"></i>
+                            <span class="action-text">Scan</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="card">
+                    <div class="card-title">Recent Transactions</div>
+                    <div id="transactionsList">
+                        <!-- Transactions will be loaded here -->
+                        <div class="centered" id="noTransactions">
+                            <p>No transactions yet.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QR Code Screen -->
+            <div id="qrCodeTab" class="tab-content">
+                <div class="card">
+                    <div class="card-title">Your QR Code</div>
+                    <div class="centered">
+                        <div id="qrCodeContainer"></div>
+                        <p>Scan this QR code to receive credits</p>
+                    </div>
+                    <button id="closeQrCodeBtn" class="btn btn-secondary">Close</button>
+                </div>
+            </div>
+
+            <!-- Scanner Screen -->
+            <div id="scannerTab" class="tab-content">
+                <div class="card">
+                    <div class="card-title">Scan QR Code</div>
+                    <div id="qrCodeCamera"></div>
+                    <button id="closeScannerBtn" class="btn btn-secondary">Close</button>
+                </div>
+            </div>
+
+            <!-- Send Screen -->
+            <div id="sendTab" class="tab-content">
+                <div class="card">
+                    <div class="card-title">Send Credits</div>
+                    <div class="form-group">
+                        <label for="recipientId" class="form-label">Recipient ID</label>
+                        <input type="text" id="recipientId" class="form-control" placeholder="Enter recipient ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="sendAmount" class="form-label">Amount (EGP)</label>
+                        <input type="number" id="sendAmount" class="form-control" placeholder="Enter amount">
+                    </div>
+                    <button id="confirmSendBtn" class="btn btn-primary">Send Credits</button>
+                    <button id="closeSendBtn" class="btn btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transfer Confirmation Modal -->
+        <div id="transferModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeModal">&times;</span>
+                <h2>Confirm Transfer</h2>
+                <p>Send <span id="confirmAmount">0</span> EGP to <span id="confirmRecipient">User</span>?</p>
+                <button id="transferBtn" class="btn btn-primary">Confirm</button>
+                <button id="cancelTransferBtn" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" data-tab="homeTab">
+                <i class="fas fa-home"></i>
+                <span class="nav-item-text">Home</span>
+            </div>
+            <div class="nav-item" data-tab="qrCodeTab">
+                <i class="fas fa-qrcode"></i>
+                <span class="nav-item-text">My QR</span>
+            </div>
+            <div class="nav-item" data-tab="scannerTab">
+                <i class="fas fa-camera"></i>
+                <span class="nav-item-text">Scan</span>
+            </div>
+            <div class="nav-item" data-tab="sendTab">
+                <i class="fas fa-paper-plane"></i>
+                <span class="nav-item-text">Send</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Credits Modal -->
+    <div id="addCreditsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeCreditsModal">&times;</span>
+            <h2 style="color: var(--primary-color); margin-bottom: 20px; text-align: center;">Add Credits</h2>
+            <div class="form-group">
+                <label for="addAmount" class="form-label">Amount to Add (EGP)</label>
+                <input type="number" id="addAmount" class="form-control" placeholder="Enter amount">
+                <p id="creditLimitMessage" style="color: #70757a; font-size: 12px; margin-top: 5px;">
+                    Your credit limit: <span id="creditLimit">0</span> EGP
+                </p>
+            </div>
+            <button id="confirmAddCreditsBtn" class="btn btn-primary">
+                <i class="fas fa-check" style="margin-right: 8px;"></i> Add Credits
+            </button>
+            <button id="cancelAddCreditsBtn" class="btn btn-secondary">
+                <i class="fas fa-times" style="margin-right: 8px;"></i> Cancel
+            </button>
+        </div>
+    </div>
+
+    <!-- Transaction Details Modal -->
+    <div id="transactionDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeDetailsModal">&times;</span>
+            <h2 style="color: var(--primary-color); margin-bottom: 20px; text-align: center;">Transaction Details</h2>
+            <div id="transactionDetailsContent"></div>
+            <button id="closeDetailsBtn" class="btn btn-secondary" style="margin-top: 20px;">Close</button>
+        </div>
+    </div>
+
+    <!-- Cancel Confirmation Modal -->
+    <div id="cancelConfirmationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeCancelModal">&times;</span>
+            <h2 style="color: var(--danger-color); margin-bottom: 20px; text-align: center;">Cancel Transaction</h2>
+            <p id="cancelConfirmationText" style="margin-bottom: 20px; text-align: center;"></p>
+            <div style="display: flex; justify-content: space-between;">
+                <button id="confirmCancelBtn" class="btn btn-danger" style="width: 48%;">
+                    <i class="fas fa-times" style="margin-right: 8px;"></i> Yes, Cancel
+                </button>
+                <button id="abortCancelBtn" class="btn btn-secondary" style="width: 48%;">
+                    <i class="fas fa-undo" style="margin-right: 8px;"></i> No, Keep
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Application Script -->
+    <script>
+        // In-memory database (will be lost on page refresh)
+        const MemoryDB = {
+            users: [],
+            transactions: [],
+            currentUser: null,
+            
+            // User methods
+            getUser: function(username) {
+                return this.users.find(user => user.username === username);
+            },
+            
+            saveUser: function(user) {
+                const index = this.users.findIndex(u => u.username === user.username);
+                
+                if (index !== -1) {
+                    this.users[index] = user;
+                } else {
+                    this.users.push(user);
+                }
+                
+                return user;
+            },
+            
+            // Transaction methods
+            addTransaction: function(transaction) {
+                if (!transaction.id) {
+                    transaction.id = Date.now() + Math.random().toString(36).substring(2, 9);
+                }
+                
+                // Add status field if not present
+                if (!transaction.status) {
+                    transaction.status = 'completed';
+                }
+                
+                // Add timestamp if not present
+                if (!transaction.timestamp) {
+                    transaction.timestamp = new Date().toISOString();
+                }
+                
+                this.transactions.push(transaction);
+                return transaction;
+            },
+            
+            getUserTransactions: function(userId, includeCancelled = false) {
+                const transactions = this.transactions.filter(t => 
+                    t.senderId === userId || t.recipientId === userId
+                );
+                
+                // Filter out cancelled unless specifically requested
+                if (!includeCancelled) {
+                    return transactions.filter(t => t.status !== 'cancelled');
+                }
+                
+                return transactions;
+            },
+            
+            // Cancel transaction
+            cancelTransaction: function(transactionId) {
+                // Find the transaction
+                const transaction = this.transactions.find(t => t.id === transactionId);
+                
+                if (!transaction) {
+                    return { success: false, message: 'Transaction not found' };
+                }
+                
+                // Check if already cancelled
+                if (transaction.status === 'cancelled') {
+                    return { success: false, message: 'Transaction already cancelled' };
+                }
+                
+                // Check cancellation window (5 minutes)
+                const transactionTime = new Date(transaction.timestamp).getTime();
+                const currentTime = new Date().getTime();
+                const timeDiffMinutes = (currentTime - transactionTime) / (1000 * 60);
+                
+                if (timeDiffMinutes > 5) {
+                    return { success: false, message: 'Transactions can only be cancelled within 5 minutes' };
+                }
+                
+                // If transaction type is credit_add, don't allow cancellation
+                if (transaction.type === 'credit_add') {
+                    return { success: false, message: 'Credit additions cannot be cancelled' };
+                }
+                
+                // Update transaction status
+                transaction.status = 'cancelled';
+                transaction.cancelledAt = new Date().toISOString();
+                
+                // Revert balances
+                if (transaction.senderId && transaction.recipientId) {
+                    const sender = this.getUser(transaction.senderId);
+                    const recipient = this.getUser(transaction.recipientId);
+                    
+                    if (sender && recipient) {
+                        // Give money back to sender
+                        sender.balance += parseFloat(transaction.amount);
+                        this.saveUser(sender);
+                        
+                        // Take money from recipient
+                        recipient.balance -= parseFloat(transaction.amount);
+                        this.saveUser(recipient);
+                        
+                        // Update UI if current user is involved
+                        if (this.currentUser && 
+                           (this.currentUser.username === sender.username || 
+                            this.currentUser.username === recipient.username)) {
+                            document.getElementById('userBalance').textContent = this.currentUser.balance;
+                        }
+                    }
+                }
+                
+                return { success: true, message: 'Transaction cancelled successfully', transaction };
+            }
+        };
+        
+        // Initialize with demo data
+        function initDemoData() {
+            // Create professor account if not exists
+            if (!MemoryDB.getUser('professor')) {
+                MemoryDB.saveUser({
+                    username: 'professor',
+                    password: 'password',
+                    fullName: 'Professor Amr',
+                    balance: 1000,
+                    creditLimit: 15000,
+                    isAdmin: true,
+                    createdAt: new Date().toISOString()
+                });
+            }
+            
+            // Pre-register students with unique IDs but no passwords
+            const students = [
+                { id: 'Lbalboul', name: 'Linda Balboul' },
+                { id: 'MAWahab', name: 'Mohamed AbdelWahab' },
+                { id: 'MEmary', name: 'Mohamed Emary' },
+                { id: 'AZeinhom', name: 'Ahmed Zeinhom' },
+                { id: 'MImam', name: 'Mohamed Imam' },
+                { id: 'MAKheir', name: 'Mohamed AbulKheir' },
+                { id: 'kmostafa', name: 'Karim Mostafa' },
+                { id: 'neldin', name: 'Nour El-Din' },
+                { id: 'mabdel', name: 'Mariam Abdel' },
+                { id: 'akhaled', name: 'Ali Khaled' },
+                { id: 'hsamir', name: 'Hoda Samir' },
+                { id: 'madel', name: 'Mohamed Adel' },
+                { id: 'ahussein', name: 'Amina Hussein' },
+                { id: 'ztamer', name: 'Ziad Tamer' },
+                { id: 'rmagdy', name: 'Rana Magdy' }
+            ];
+            
+            // Add each student with no password but with ID
+            students.forEach(student => {
+                if (!MemoryDB.getUser(student.id)) {
+                    MemoryDB.saveUser({
+                        username: student.id,
+                        password: '', // Empty password, students will set this themselves
+                        fullName: student.name,
+                        balance: 100,
+                        creditLimit: 1000,
+                        passwordSet: false, // Flag to indicate password needs to be set
+                        createdAt: new Date().toISOString()
+                    });
+                }
+            });
+            
+            // Create a demo student account with password for testing
+            if (!MemoryDB.getUser('student')) {
+                MemoryDB.saveUser({
+                    username: 'student',
+                    password: 'password',
+                    fullName: 'Student Mohammed',
+                    balance: 100,
+                    creditLimit: 1000,
+                    passwordSet: true,
+                    createdAt: new Date().toISOString()
+                });
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initDemoData();
+            setupEventListeners();
+            showScreen('authScreen');
+            
+            // Initialize localStorage
+            initLocalStorage();
+            loadFromLocalStorage();
+            
+            // Set up periodic auto-save
+            setInterval(saveToLocalStorage, 30000); // Save every 30 seconds
+            
+            // Save on page unload
+            window.addEventListener('beforeunload', saveToLocalStorage);
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Auth screen events
+            document.getElementById('showRegisterBtn').addEventListener('click', showRegisterForm);
+            document.getElementById('showLoginBtn').addEventListener('click', showLoginForm);
+            document.getElementById('loginBtn').addEventListener('click', loginUser);
+            document.getElementById('registerBtn').addEventListener('click', registerUser);
+
+            // Main app events
+            document.getElementById('sendBtn').addEventListener('click', () => showTab('sendTab'));
+            document.getElementById('receiveBtn').addEventListener('click', () => showTab('qrCodeTab'));
+            document.getElementById('scanBtn').addEventListener('click', () => showTab('scannerTab'));
+            document.getElementById('closeQrCodeBtn').addEventListener('click', () => showTab('homeTab'));
+            document.getElementById('closeScannerBtn').addEventListener('click', () => showTab('homeTab'));
+            document.getElementById('closeSendBtn').addEventListener('click', () => showTab('homeTab'));
+            document.getElementById('confirmSendBtn').addEventListener('click', showTransferConfirmation);
+
+            // Transfer modal events
+            document.getElementById('closeModal').addEventListener('click', () => document.getElementById('transferModal').style.display = 'none');
+            document.getElementById('cancelTransferBtn').addEventListener('click', () => document.getElementById('transferModal').style.display = 'none');
+            document.getElementById('transferBtn').addEventListener('click', processTransfer);
+            
+            // Add Credits modal events
+            document.getElementById('closeCreditsModal').addEventListener('click', () => document.getElementById('addCreditsModal').style.display = 'none');
+            document.getElementById('cancelAddCreditsBtn').addEventListener('click', () => document.getElementById('addCreditsModal').style.display = 'none');
+            document.getElementById('confirmAddCreditsBtn').addEventListener('click', processAddCredits);
+
+            // Bottom navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    showTab(tabId);
+                    
+                    // Update active nav item
+                    navItems.forEach(navItem => navItem.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Transaction details modal events
+            document.getElementById('closeDetailsModal')?.addEventListener('click', function() {
+                document.getElementById('transactionDetailsModal').style.display = 'none';
+            });
+            
+            document.getElementById('closeDetailsBtn')?.addEventListener('click', function() {
+                document.getElementById('transactionDetailsModal').style.display = 'none';
+            });
+            
+            // Cancel confirmation modal events
+            document.getElementById('closeCancelModal')?.addEventListener('click', function() {
+                document.getElementById('cancelConfirmationModal').style.display = 'none';
+            });
+            
+            document.getElementById('abortCancelBtn')?.addEventListener('click', function() {
+                document.getElementById('cancelConfirmationModal').style.display = 'none';
+            });
+        }
+
+        // Show login form
+        function showLoginForm() {
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+        }
+
+        // Show register form
+        function showRegisterForm() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+        }
+
+        // Register a new user
+        function registerUser() {
+            showLoading(true);
+            
+            const username = document.getElementById('registerUsername').value.trim();
+            const password = document.getElementById('registerPassword').value.trim();
+            const fullName = document.getElementById('registerFullName').value.trim();
+            
+            if (!username || !password || !fullName) {
+                showNotification('Please fill all fields', 'error');
+                showLoading(false);
+                return;
+            }
+            
+            // Check if username already exists
+            const existingUser = MemoryDB.getUser(username);
+            
+            if (existingUser) {
+                showNotification('Username already exists', 'error');
+                showLoading(false);
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                username: username,
+                password: password, // In a real app, this should be hashed
+                fullName: fullName,
+                balance: 100, // Default starter credit
+                creditLimit: 1000, // Default credit limit
+                passwordSet: true,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Save user to memory
+            MemoryDB.saveUser(newUser);
+            
+            showNotification('Registration successful!', 'success');
+            
+            // Auto login after registration
+            MemoryDB.currentUser = newUser;
+            loadUserData();
+            showScreen('appScreen');
+            showLoading(false);
+            
+            // Save to localStorage
+            saveToLocalStorage();
+        }
+
+        // Login a user
+        function loginUser() {
+            showLoading(true);
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            
+            if (!username) {
+                showNotification('Please enter a username', 'error');
+                showLoading(false);
+                return;
+            }
+            
+            // Get user from memory
+            const user = MemoryDB.getUser(username);
+            
+            if (!user) {
+                showNotification('User not found', 'error');
+                showLoading(false);
+                return;
+            }
+            
+            // Check if this is a pre-registered student with no password
+            if (!user.password) {
+                // First login - set the password
+                user.password = password;
+                user.passwordSet = true;
+                MemoryDB.saveUser(user);
+                showNotification('Password set successfully!', 'success');
+                MemoryDB.currentUser = user;
+                loadUserData();
+                showScreen('appScreen');
+                showLoading(false);
+                
+                // Save to localStorage
+                saveToLocalStorage();
+                return;
+            }
+            
+            if (user.password !== password) {
+                showNotification('Incorrect password', 'error');
+                showLoading(false);
+                return;
+            }
+            
+            // Login successful
+            MemoryDB.currentUser = user;
+            loadUserData();
+            showScreen('appScreen');
+            showNotification('Login successful!', 'success');
+            showLoading(false);
+        }
+
+        // Load user data and update UI
+        function loadUserData() {
+            if (!MemoryDB.currentUser) return;
+            
+            document.getElementById('userName').textContent = MemoryDB.currentUser.fullName;
+            document.getElementById('userBalance').textContent = MemoryDB.currentUser.balance;
+            document.getElementById('userAvatar').textContent = MemoryDB.currentUser.fullName.charAt(0);
+            
+            // Generate QR code for the user
+            generateQRCode();
+            
+            // Load transactions
+            loadTransactions();
+            
+            // Add header buttons (save/logout)
+            addHeaderButtons();
+            
+            // Add "Add Credits" button
+            addAddCreditsButton();
+            
+            // Add cancel all button for professor
+            if (MemoryDB.currentUser.isAdmin) {
+                addCancelAllButton();
+            }
+        }
+
+        // Generate QR code
+        function generateQRCode() {
+            const qrCodeContainer = document.getElementById('qrCodeContainer');
+            qrCodeContainer.innerHTML = ''; // Clear previous QR code
+            
+            // Create data for QR code (user info)
+            const qrData = JSON.stringify({
+                userId: MemoryDB.currentUser.username,
+                name: MemoryDB.currentUser.fullName
+            });
+            
+            // Generate QR code
+            new QRCode(qrCodeContainer, {
+                text: qrData,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        // Initialize QR scanner
+        let scanner = null;
+        
+        function initScanner() {
+            console.log('Initializing QR scanner...');
+            
+            // Add manual entry in case scanner fails
+            addManualQrEntry();
+            
+            try {
+                // Clean up any existing scanner
+                if (scanner) {
+                    try {
+                        scanner.stop().then(() => {
+                            scanner = null;
+                        }).catch(console.error);
+                    } catch (error) {
+                        console.error('Error cleaning up scanner:', error);
+                        scanner = null;
+                    }
+                }
+                
+                // Get the camera element
+                const qrCodeCamera = document.getElementById('qrCodeCamera');
+                if (!qrCodeCamera) {
+                    console.error('QR code camera element not found');
+                    showScannerError('Camera element not found');
+                    return;
+                }
+                
+                // Clear any previous content
+                qrCodeCamera.innerHTML = '';
+                
+                // Create new scanner
+                scanner = new Html5Qrcode("qrCodeCamera");
+                
+                // Scanning configuration
+                const config = {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 },
+                    experimentalFeatures: {
+                        useBarCodeDetectorIfSupported: true
+                    }
+                };
+                
+                // Show 'accessing camera' message
+                showScannerMessage('Accessing camera...');
+                
+                // Try to start scanning with rear camera
+                scanner.start(
+                    { facingMode: "environment" },
+                    config,
+                    onScanSuccess,
+                    (errorMessage) => {
+                        // This is called frequently when no QR is detected
+                        // No need to show these errors
+                    }
+                ).catch(error => {
+                    console.error('Error starting scanner:', error);
+                    showScannerError('Could not access camera: ' + error.message);
+                    
+                    // Focus on manual input
+                    setTimeout(() => {
+                        const manualInput = document.getElementById('manualQrInput');
+                        if (manualInput) manualInput.focus();
+                    }, 500);
+                });
+            } catch (error) {
+                console.error('Error in scanner initialization:', error);
+                showScannerError('Scanner initialization failed: ' + error.message);
+            }
+        }
+
+        // QR code scan success handler
+        function onScanSuccess(decodedText) {
+            console.log('QR Scan successful, decoded text:', decodedText);
+            
+            // Stop scanner
+            if (scanner) {
+                try {
+                    scanner.stop().then(() => {
+                        scanner = null;
+                    }).catch(error => {
+                        console.error('Error stopping scanner:', error);
+                        scanner = null;
+                    });
+                } catch (error) {
+                    console.error('Error stopping scanner:', error);
+                    scanner = null;
+                }
+            }
+            
+            // Process the QR data
+            processQrData(decodedText);
+        }
+        
+        // Function to process QR code data (from scanner or manual entry)
+        function processQrData(data) {
+            try {
+                // Try different methods to extract userId
+                let userId = null;
+                
+                // First, try to parse as JSON
+                try {
+                    const jsonData = JSON.parse(data);
+                    if (jsonData && jsonData.userId) {
+                        userId = jsonData.userId;
+                    }
+                } catch (e) {
+                    console.log('Not valid JSON, trying other formats');
+                }
+                
+                // If not JSON, try to extract with regex
+                if (!userId) {
+                    const matches = data.match(/userId["']?\s*:\s*["']([^"']+)["']/i);
+                    if (matches && matches[1]) {
+                        userId = matches[1];
+                    }
+                }
+                
+                // If still not found, try direct username (if it exists in our database)
+                if (!userId) {
+                    const directId = data.trim();
+                    if (directId && MemoryDB.getUser(directId)) {
+                        userId = directId;
+                    }
+                }
+                
+                // Process the userId if found
+                if (userId) {
+                    const recipient = MemoryDB.getUser(userId);
+                    
+                    if (recipient) {
+                        // Populate recipient field
+                        document.getElementById('recipientId').value = userId;
+                        
+                        // Switch to send tab
+                        showTab('sendTab');
+                        
+                        // Focus on amount field
+                        document.getElementById('sendAmount').focus();
+                        
+                        // Show success
+                        showNotification(`Ready to send to ${recipient.fullName}`, 'success');
+                    } else {
+                        showNotification(`User ID "${userId}" not found`, 'error');
+                    }
+                } else {
+                    showNotification('Could not find a valid user ID in the provided data', 'error');
+                }
+            } catch (error) {
+                console.error('Error processing QR data:', error);
+                showNotification('Error processing QR data: ' + error.message, 'error');
+            }
+        }
+
+        // QR code scan failure handler (not used directly due to frequency)
+        function onScanFailure(error) {
+            // This is called frequently when no QR is detected, so we don't need to show errors
+            console.log('QR scan error: ' + error);
+        }
+
+        // Show transfer confirmation modal
+        function showTransferConfirmation() {
+            const recipientId = document.getElementById('recipientId').value.trim();
+            const amount = parseFloat(document.getElementById('sendAmount').value);
+            
+            if (!recipientId) {
+                showNotification('Please enter recipient ID', 'error');
+                return;
+            }
+            
+            if (!amount || amount <= 0) {
+                showNotification('Please enter a valid amount', 'error');
+                return;
+            }
+            
+            if (amount > MemoryDB.currentUser.balance) {
+                showNotification('Insufficient balance', 'error');
+                return;
+            }
+            
+            // Get recipient info
+            const recipient = MemoryDB.getUser(recipientId);
+            
+            if (!recipient) {
+                showNotification('Recipient not found', 'error');
+                return;
+            }
+            
+            if (recipient.username === MemoryDB.currentUser.username) {
+                showNotification('You cannot send to yourself', 'error');
+                return;
+            }
+            
+            // Show confirmation modal
+            document.getElementById('confirmAmount').textContent = amount;
+            document.getElementById('confirmRecipient').textContent = recipient.fullName;
+            document.getElementById('transferModal').style.display = 'block';
+        }
+
+        // Process transfer between users
+        function processTransfer() {
+            showLoading(true);
+            
+            const recipientId = document.getElementById('recipientId').value.trim();
+            const amount = parseFloat(document.getElementById('sendAmount').value);
+            
+            // Get recipient
+            const recipient = MemoryDB.getUser(recipientId);
+            
+            if (!recipient) {
+                showNotification('Recipient not found', 'error');
+                showLoading(false);
+                return;
+            }
+            
+            // Update sender's balance
+            MemoryDB.currentUser.balance -= amount;
+            MemoryDB.saveUser(MemoryDB.currentUser);
+            
+            // Update recipient's balance
+            recipient.balance += amount;
+            MemoryDB.saveUser(recipient);
+            
+            // Create transaction record
+            const transactionData = {
+                senderId: MemoryDB.currentUser.username,
+                senderName: MemoryDB.currentUser.fullName,
+                recipientId: recipient.username,
+                recipientName: recipient.fullName,
+                amount: amount,
+                timestamp: new Date().toISOString(),
+                status: 'completed'
+            };
+            
+            // Add transaction
+            MemoryDB.addTransaction(transactionData);
+            
+            // Update UI
+            document.getElementById('userBalance').textContent = MemoryDB.currentUser.balance;
+            document.getElementById('recipientId').value = '';
+            document.getElementById('sendAmount').value = '';
+            
+            // Hide modal
+            document.getElementById('transferModal').style.display = 'none';
+            
+            // Load transactions
+            loadTransactions();
+            
+            showTab('homeTab');
+            showNotification(`Successfully sent ${amount} EGP to ${recipient.fullName}`, 'success');
+            showLoading(false);
+            
+            // Save to localStorage
+            saveToLocalStorage();
+        }
+
+        // Load user's transactions
+        function loadTransactions() {
+            if (!MemoryDB.currentUser) return;
+            
+            const transactionsList = document.getElementById('transactionsList');
+            const noTransactions = document.getElementById('noTransactions');
+            
+            // Clear current list
+            transactionsList.innerHTML = '';
+            transactionsList.appendChild(noTransactions);
+            
+            // Get all transactions for current user
+            const transactions = MemoryDB.getUserTransactions(MemoryDB.currentUser.username);
+            
+            // Sort by timestamp (newest first)
+            transactions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            if (transactions.length > 0) {
+                noTransactions.style.display = 'none';
+                
+                // Create transaction elements
+                transactions.forEach(transaction => {
+                    const isSent = transaction.senderId === MemoryDB.currentUser.username;
+                    const transactionEl = createTransactionElement(transaction, isSent);
+                    transactionsList.appendChild(transactionEl);
+                });
+            } else {
+                noTransactions.style.display = 'block';
+            }
+        }
+
+
+        // Create transaction element
+        function createTransactionElement(transaction, isSent) {
+            const div = document.createElement('div');
+            div.className = 'transaction';
+            div.setAttribute('data-id', transaction.id);
+            
+            const date = new Date(transaction.timestamp);
+            const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+            
+            // Determine transaction type
+            let icon, typeClass, partner, amountPrefix;
+            
+            if (transaction.type === 'credit_add') {
+                // Credit addition
+                icon = 'plus-circle';
+                typeClass = 'received';
+                partner = 'Credit System';
+                amountPrefix = '+';
+            } else if (isSent) {
+                // Regular sent transaction
+                icon = 'paper-plane';
+                typeClass = 'sent';
+                partner = transaction.recipientName;
+                amountPrefix = '-';
+            } else {
+                // Regular received transaction
+                icon = 'download';
+                typeClass = 'received';
+                partner = transaction.senderName;
+                amountPrefix = '+';
+            }
+            
+            // Create basic structure
+            div.innerHTML = `
+                <div class="transaction-left">
+                    <div class="transaction-icon ${typeClass}">
+                        <i class="fas fa-${icon}"></i>
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-name">${partner}</div>
+                        <div class="transaction-date">${formattedDate}</div>
+                    </div>
+                </div>
+                <div class="transaction-right">
+                    <div class="transaction-amount ${typeClass} ${transaction.status === 'cancelled' ? 'cancelled' : ''}">
+                        ${amountPrefix} ${transaction.amount} EGP
+                        ${transaction.status === 'cancelled' ? '<span class="status-badge cancelled">Cancelled</span>' : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Add cancel button if eligible
+            if (isSent && transaction.status !== 'cancelled' && !transaction.type) {
+                const transactionTime = new Date(transaction.timestamp).getTime();
+                const currentTime = new Date().getTime();
+                const timeDiffMinutes = (currentTime - transactionTime) / (1000 * 60);
+                
+                if (timeDiffMinutes <= 5) {
+                    const cancelBtn = document.createElement('button');
+                    cancelBtn.className = 'cancel-btn';
+                    cancelBtn.innerHTML = '<i class="fas fa-times"></i>';
+                    cancelBtn.title = 'Cancel Transaction';
+                    cancelBtn.style.marginLeft = '10px';
+                    
+                    // Add click handler
+                    cancelBtn.addEventListener('click', function(e) {
+                        e.stopPropagation(); // Prevent transaction details from showing
+                        showCancelConfirmation(transaction);
+                    });
+                    
+                    // Add button to transaction
+                    const rightDiv = div.querySelector('.transaction-right');
+                    rightDiv.appendChild(cancelBtn);
+                }
+            }
+            
+            // Make transaction clickable to show details
+            div.addEventListener('click', function() {
+                showTransactionDetails(transaction);
+            });
+            
+            return div;
+        }
+
+        // Show a specific tab
+        function showTab(tabId) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show the selected tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // Special handling for scanner tab
+            if (tabId === 'scannerTab') {
+                // Initialize scanner with a slight delay
+                setTimeout(() => {
+                    initScanner();
+                    
+                    // Focus on manual input as a fallback
+                    setTimeout(() => {
+                        const manualInput = document.getElementById('manualQrInput');
+                        if (manualInput) manualInput.focus();
+                    }, 1000);
+                }, 300);
+            } else if (scanner) {
+                // Stop scanner when switching to other tabs
+                try {
+                    scanner.stop().then(() => {
+                        scanner = null;
+                    }).catch(console.error);
+                } catch (error) {
+                    console.error('Error stopping scanner:', error);
+                    scanner = null;
+                }
+            }
+        }
+
+        // Show a specific screen
+        function showScreen(screenId) {
+            // Hide all screens
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => screen.classList.remove('active'));
+            
+            // Show the selected screen
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification';
+            notification.classList.add(type);
+            notification.style.display = 'block';
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Show/hide loading spinner
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'flex' : 'none';
+        }
+        
+        // Add "Add Credits" button
+        function addAddCreditsButton() {
+            // Skip if button already exists
+            if (document.getElementById('addCreditsBtn')) return;
+            
+            // Get the actions div in the home screen
+            const actionsDiv = document.querySelector('.actions');
+            if (!actionsDiv) return;
+            
+            // Create the "Add Credits" button container
+            const addCreditsContainer = document.createElement('div');
+            addCreditsContainer.style.marginTop = '15px';
+            addCreditsContainer.style.borderTop = '1px solid #e0e0e0';
+            addCreditsContainer.style.paddingTop = '15px';
+            
+            // Create the button
+            addCreditsContainer.innerHTML = `
+                <button id="addCreditsBtn" class="btn btn-primary">
+                    <i class="fas fa-plus-circle" style="margin-right: 8px;"></i> Add Credits
+                </button>
+            `;
+            
+            // Append after the actions div
+            actionsDiv.parentNode.insertBefore(addCreditsContainer, actionsDiv.nextSibling);
+            
+            // Add event listener
+            document.getElementById('addCreditsBtn').addEventListener('click', showAddCreditsModal);
+        }
+        
+        // Show add credits modal
+        function showAddCreditsModal() {
+            const creditLimit = MemoryDB.currentUser.creditLimit || 1000;
+            const remainingLimit = creditLimit - MemoryDB.currentUser.balance;
+            
+            document.getElementById('creditLimit').textContent = remainingLimit;
+            document.getElementById('addAmount').value = '';
+            document.getElementById('addCreditsModal').style.display = 'block';
+        }
+        
+        // Process adding credits
+        function processAddCredits() {
+            showLoading(true);
+            
+            const amount = parseFloat(document.getElementById('addAmount').value);
+            
+            if (!amount || amount <= 0) {
+                showNotification('Please enter a valid amount', 'error');
+                showLoading(false);
+                return;
+            }
+            
+            const creditLimit = MemoryDB.currentUser.creditLimit || 1000;
+            const newBalance = MemoryDB.currentUser.balance + amount;
+            
+            if (newBalance > creditLimit) {
+                showNotification(`Cannot exceed credit limit of ${creditLimit} EGP`, 'error');
+                showLoading(false);
+                return;
+            }
+            
+            // Update user's balance
+            MemoryDB.currentUser.balance = newBalance;
+            MemoryDB.saveUser(MemoryDB.currentUser);
+            
+            // Create transaction record for adding credits
+            const transactionData = {
+                senderId: 'system',
+                senderName: 'Credit System',
+                recipientId: MemoryDB.currentUser.username,
+                recipientName: MemoryDB.currentUser.fullName,
+                amount: amount,
+                timestamp: new Date().toISOString(),
+                type: 'credit_add',
+                status: 'completed'
+            };
+            
+            // Add transaction
+            MemoryDB.addTransaction(transactionData);
+            
+            // Update UI
+            document.getElementById('userBalance').textContent = MemoryDB.currentUser.balance;
+            
+            // Hide modal
+            document.getElementById('addCreditsModal').style.display = 'none';
+            
+            // Load transactions
+            loadTransactions();
+            
+            showNotification(`Successfully added ${amount} EGP to your account`, 'success');
+            showLoading(false);
+            
+            // Save to localStorage
+            saveToLocalStorage();
+        }
+        
+        // Function to show transaction details
+        function showTransactionDetails(transaction) {
+            // Format dates
+            const date = new Date(transaction.timestamp);
+            const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+            
+            let cancelledInfo = '';
+            if (transaction.status === 'cancelled' && transaction.cancelledAt) {
+                const cancelDate = new Date(transaction.cancelledAt);
+                const formattedCancelDate = cancelDate.toLocaleDateString() + ' ' + cancelDate.toLocaleTimeString();
+                cancelledInfo = `
+                    <div class="detail-row">
+                        <div class="detail-label">Cancelled At:</div>
+                        <div class="detail-value">${formattedCancelDate}</div>
+                    </div>
+                `;
+            }
+            
+            // Populate details
+            const detailsContent = document.getElementById('transactionDetailsContent');
+            detailsContent.innerHTML = `
+                <div class="detail-row">
+                    <div class="detail-label">ID:</div>
+                    <div class="detail-value">${transaction.id}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Type:</div>
+                    <div class="detail-value">${transaction.type ? 'Credit Addition' : 'Transfer'}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">From:</div>
+                    <div class="detail-value">${transaction.senderName}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">To:</div>
+                    <div class="detail-value">${transaction.recipientName}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Amount:</div>
+                    <div class="detail-value">${transaction.amount} EGP</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Date:</div>
+                    <div class="detail-value">${formattedDate}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Status:</div>
+                    <div class="detail-value status-${transaction.status}">
+                        ${transaction.status.toUpperCase()}
+                    </div>
+                </div>
+                ${cancelledInfo}
+            `;
+            
+            // Add cancel button if eligible
+            if (MemoryDB.currentUser && 
+                transaction.senderId === MemoryDB.currentUser.username && 
+                transaction.status !== 'cancelled' && 
+                !transaction.type) {
+                
+                const transactionTime = new Date(transaction.timestamp).getTime();
+                const currentTime = new Date().getTime();
+                const timeDiffMinutes = (currentTime - transactionTime) / (1000 * 60);
+                
+                if (timeDiffMinutes <= 5) {
+                    const cancelBtn = document.createElement('button');
+                    cancelBtn.className = 'btn btn-danger';
+                    cancelBtn.style.marginTop = '20px';
+                    cancelBtn.style.width = '100%';
+                    cancelBtn.innerHTML = '<i class="fas fa-times" style="margin-right: 8px;"></i> Cancel Transaction';
+                    
+                    cancelBtn.addEventListener('click', function() {
+                        document.getElementById('transactionDetailsModal').style.display = 'none';
+                        showCancelConfirmation(transaction);
+                    });
+                    
+                    detailsContent.appendChild(cancelBtn);
+                }
+            }
+            
+            // Show modal
+            document.getElementById('transactionDetailsModal').style.display = 'block';
+        }
+        
+        // Function to show cancel confirmation
+        function showCancelConfirmation(transaction) {
+            // Set confirmation text
+            document.getElementById('cancelConfirmationText').innerHTML = `
+                Are you sure you want to cancel your transfer of <strong>${transaction.amount} EGP</strong> 
+                to <strong>${transaction.recipientName}</strong>?<br><br>
+                This will return the funds to your account.
+            `;
+            
+            // Set up confirm button
+            const confirmBtn = document.getElementById('confirmCancelBtn');
+            confirmBtn.onclick = function() {
+                // Process cancellation
+                const result = MemoryDB.cancelTransaction(transaction.id);
+                
+                if (result.success) {
+                    // Reload transactions
+                    loadTransactions();
+                    
+                    // Show success notification
+                    showNotification('Transaction cancelled successfully', 'success');
+                    
+                    // Save to localStorage
+                    saveToLocalStorage();
+                } else {
+                    // Show error notification
+                    showNotification(result.message, 'error');
+                }
+                
+                // Hide modal
+                document.getElementById('cancelConfirmationModal').style.display = 'none';
+            };
+            
+            // Show modal
+            document.getElementById('cancelConfirmationModal').style.display = 'block';
+        }
+        
+        // Function to add cancel all button for admin/professor
+        function addCancelAllButton() {
+            // Only add for professor account
+            if (!MemoryDB.currentUser || 
+                (MemoryDB.currentUser.username !== 'professor' && !MemoryDB.currentUser.isAdmin)) {
+                return;
+            }
+            
+            // Skip if button already exists
+            if (document.getElementById('cancelAllTransactionsBtn')) {
+                return;
+            }
+            
+            // Find transactions card
+            const transactionsCard = document.querySelector('#homeTab .card:nth-child(2)');
+            if (!transactionsCard) return;
+            
+            // Create button container
+            const btnContainer = document.createElement('div');
+            btnContainer.style.marginTop = '15px';
+            btnContainer.style.textAlign = 'center';
+            
+            // Create button
+            const cancelAllBtn = document.createElement('button');
+            cancelAllBtn.id = 'cancelAllTransactionsBtn';
+            cancelAllBtn.className = 'btn btn-danger';
+            cancelAllBtn.style.maxWidth = '300px';
+            cancelAllBtn.innerHTML = '<i class="fas fa-times" style="margin-right: 8px;"></i> Cancel All Recent Transactions';
+            
+            // Add click handler
+            cancelAllBtn.addEventListener('click', function() {
+                showCancelAllConfirmation();
+            });
+            
+            // Add to container and page
+            btnContainer.appendChild(cancelAllBtn);
+            transactionsCard.appendChild(btnContainer);
+        }
+        
+        // Function to show cancel all confirmation
+        function showCancelAllConfirmation() {
+            // Create modal content
+            const modalHTML = `
+                <div class="modal-content">
+                    <span class="close" id="closeCancelAllModal">&times;</span>
+                    <h2 style="color: var(--danger-color); margin-bottom: 20px; text-align: center;">Cancel All Recent Transactions</h2>
+                    <p style="margin-bottom: 20px; text-align: center;">
+                        Are you sure you want to cancel all transactions made in the last 5 minutes?<br><br>
+                        This will return all funds to the respective senders.
+                    </p>
+                    <div style="display: flex; justify-content: space-between;">
+                        <button id="confirmCancelAllBtn" class="btn btn-danger" style="width: 48%;">
+                            <i class="fas fa-times" style="margin-right: 8px;"></i> Yes, Cancel All
+                        </button>
+                        <button id="abortCancelAllBtn" class="btn btn-secondary" style="width: 48%;">
+                            <i class="fas fa-undo" style="margin-right: 8px;"></i> No, Keep All
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Create or update the modal
+            let modal = document.getElementById('cancelAllConfirmationModal');
+            
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'cancelAllConfirmationModal';
+                modal.className = 'modal';
+                document.body.appendChild(modal);
+            }
+            
+            modal.innerHTML = modalHTML;
+            
+            // Add event listeners
+            document.getElementById('closeCancelAllModal').addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            document.getElementById('abortCancelAllBtn').addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            // Set up confirm button
+            document.getElementById('confirmCancelAllBtn').addEventListener('click', function() {
+                // Process cancellation
+                cancelAllRecentTransactions();
+                
+                // Hide modal
+                modal.style.display = 'none';
+            });
+            
+            // Show modal
+            modal.style.display = 'block';
+        }
+        
+        // Function to cancel all recent transactions
+        function cancelAllRecentTransactions() {
+            // Show loading spinner
+            showLoading(true);
+            
+            // Get current time for 5-minute window
+            const currentTime = new Date().getTime();
+            
+            // Find all eligible transactions
+            let cancelCount = 0;
+            
+            MemoryDB.transactions.forEach(transaction => {
+                // Skip credit additions and already cancelled transactions
+                if (transaction.type === 'credit_add' || transaction.status === 'cancelled') {
+                    return;
+                }
+                
+                // Check if within 5-minute window
+                const transactionTime = new Date(transaction.timestamp).getTime();
+                const timeDiffMinutes = (currentTime - transactionTime) / (1000 * 60);
+                
+                if (timeDiffMinutes <= 5) {
+                    // Cancel transaction
+                    const result = MemoryDB.cancelTransaction(transaction.id);
+                    if (result.success) {
+                        cancelCount++;
+                    }
+                }
+            });
+            
+            // Reload transactions
+            loadTransactions();
+            
+            // Show notification
+            if (cancelCount > 0) {
+                showNotification(`Successfully cancelled ${cancelCount} recent transactions`, 'success');
+                
+                // Save to localStorage
+                saveToLocalStorage();
+            } else {
+                showNotification('No eligible transactions to cancel', 'success');
+            }
+            
+            // Hide loading spinner
+            showLoading(false);
+        }
+        
+        // Function to add manual QR entry section
+        function addManualQrEntry() {
+            // Get scanner card
+            const scannerCard = document.querySelector('#scannerTab .card');
+            if (!scannerCard) return;
+            
+            // Skip if already added
+            if (document.getElementById('manualQrInput')) return;
+            
+            // Create manual entry section
+            const manualSection = document.createElement('div');
+            manualSection.id = 'manualQrEntrySection';
+            manualSection.style.marginTop = '20px';
+            manualSection.style.borderTop = '1px solid var(--border-color)';
+            manualSection.style.paddingTop = '15px';
+            
+            manualSection.innerHTML = `
+                <h4 style="text-align: center; margin-bottom: 15px; color: var(--primary-color);">
+                    Can't scan? Enter QR data manually:
+                </h4>
+                <div class="form-group">
+                    <input type="text" id="manualQrInput" class="form-control" 
+                        placeholder='Enter QR data (e.g., {"userId":"professor","name":"Professor Amr"})'>
+                </div>
+                <button id="processManualQrBtn" class="btn btn-primary">Process QR Data</button>
+                <p style="margin-top: 10px; text-align: center; font-size: 12px; color: #666;">
+                    Tip: You can also simply enter a username (e.g., "professor").
+                </p>
+            `;
+            
+            // Add to scanner card
+            scannerCard.appendChild(manualSection);
+            
+            // Add click handler
+            document.getElementById('processManualQrBtn').addEventListener('click', function() {
+                const manualData = document.getElementById('manualQrInput').value.trim();
+                if (manualData) {
+                    processQrData(manualData);
+                } else {
+                    showNotification('Please enter QR data', 'error');
+                }
+            });
+            
+            // Add enter key handler
+            document.getElementById('manualQrInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('processManualQrBtn').click();
+                }
+            });
+        }
+        
+        // Function to show scanner error message
+        function showScannerError(message) {
+            const qrCodeCamera = document.getElementById('qrCodeCamera');
+            if (!qrCodeCamera) return;
+            
+            qrCodeCamera.innerHTML = `
+                <div style="display: flex; height: 100%; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; background-color: rgba(0,0,0,0.8); border-radius: 8px;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 40px; margin-bottom: 15px; color: var(--danger-color);"></i>
+                    <h3 style="margin-bottom: 10px;">Camera Error</h3>
+                    <p style="padding: 0 20px;">${message}</p>
+                    <p style="margin-top: 20px;">Please use manual entry below.</p>
+                </div>
+            `;
+            
+            // Focus on manual input
+            setTimeout(() => {
+                const manualInput = document.getElementById('manualQrInput');
+                if (manualInput) manualInput.focus();
+            }, 500);
+        }
+        
+        // Function to show scanner message
+        function showScannerMessage(message) {
+            const qrCodeCamera = document.getElementById('qrCodeCamera');
+            if (!qrCodeCamera) return;
+            
+            qrCodeCamera.innerHTML = `
+                <div style="display: flex; height: 100%; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; background-color: rgba(0,0,0,0.8); border-radius: 8px;">
+                    <i class="fas fa-camera" style="font-size: 40px; margin-bottom: 15px; color: var(--primary-color);"></i>
+                    <h3 style="margin-bottom: 10px;">${message}</h3>
+                    <div class="spinner" style="width: 30px; height: 30px; margin-top: 15px;"></div>
+                </div>
+            `;
+        }
+        
+        // Local Storage Implementation
+        
+        // Define storage keys
+        const STORAGE_KEYS = {
+            USERS: 'instacredit_users',
+            TRANSACTIONS: 'instacredit_transactions'
+            // Deliberately NOT storing current user to prevent auto-login
+        };
+        
+        // Initialize localStorage
+        function initLocalStorage() {
+            if (!localStorage.getItem(STORAGE_KEYS.USERS)) {
+                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify([]));
+            }
+            
+            if (!localStorage.getItem(STORAGE_KEYS.TRANSACTIONS)) {
+                localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify([]));
+            }
+            
+            // Remove any current user in localStorage to prevent auto-login
+            localStorage.removeItem('instacredit_current_user');
+        }
+        
+        // Save data to localStorage
+        function saveToLocalStorage() {
+            // Save all users
+            localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(MemoryDB.users));
+            
+            // Save all transactions
+            localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(MemoryDB.transactions));
+            
+            console.log("Data saved to localStorage");
+        }
+        
+        // Load data from localStorage
+        function loadFromLocalStorage() {
+            // Load users
+            const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || '[]');
+            
+            // Add users that don't already exist in memory
+            users.forEach(user => {
+                if (!MemoryDB.getUser(user.username)) {
+                    MemoryDB.users.push(user);
+                }
+            });
+            
+            // Load transactions
+            const transactions = JSON.parse(localStorage.getItem(STORAGE_KEYS.TRANSACTIONS) || '[]');
+            
+            // Add transactions that don't already exist in memory
+            const existingTransactionIds = MemoryDB.transactions.map(t => t.id);
+            transactions.forEach(transaction => {
+                if (!existingTransactionIds.includes(transaction.id)) {
+                    MemoryDB.transactions.push(transaction);
+                }
+            });
+            
+            console.log("Data loaded from localStorage");
+        }
+        
+        // Add header buttons (save/logout)
+        function addHeaderButtons() {
+            // Don't add buttons if user is not logged in
+            if (!MemoryDB.currentUser) return;
+            
+            // Skip if buttons already exist
+            if (document.querySelector('.header-buttons')) return;
+            
+            const header = document.querySelector('.header');
+            if (!header) return;
+            
+            // Create buttons container
+            const buttonsContainer = document.createElement('div');
+            buttonsContainer.className = 'header-buttons';
+            buttonsContainer.style.display = 'flex';
+            buttonsContainer.style.marginLeft = '15px';
+            
+            // Add save button
+            const saveButton = document.createElement('div');
+            saveButton.className = 'header-btn save-btn';
+            saveButton.innerHTML = '<i class="fas fa-save"></i>';
+            saveButton.title = 'Save Data';
+            saveButton.style.fontSize = '24px';
+            saveButton.style.color = 'var(--primary-color)';
+            saveButton.style.cursor = 'pointer';
+            saveButton.style.marginRight = '15px';
+            
+            saveButton.addEventListener('click', function() {
+                saveToLocalStorage();
+                showNotification('Data saved successfully!', 'success');
+            });
+            
+            // Add logout button
+            const logoutButton = document.createElement('div');
+            logoutButton.className = 'header-btn logout-btn';
+            logoutButton.innerHTML = '<i class="fas fa-sign-out-alt"></i>';
+            logoutButton.title = 'Logout';
+            logoutButton.style.fontSize = '24px';
+            logoutButton.style.color = 'var(--primary-color)';
+            logoutButton.style.cursor = 'pointer';
+            
+            logoutButton.addEventListener('click', function() {
+                MemoryDB.currentUser = null;
+                showScreen('authScreen');
+                
+                // Clear login form fields
+                const loginUsername = document.getElementById('loginUsername');
+                const loginPassword = document.getElementById('loginPassword');
+                if (loginUsername) loginUsername.value = '';
+                if (loginPassword) loginPassword.value = '';
+                
+                showNotification('Logged out successfully', 'success');
+            });
+            
+            // Add buttons to container
+            buttonsContainer.appendChild(saveButton);
+            buttonsContainer.appendChild(logoutButton);
+            
+            // Add container to header
+            header.appendChild(buttonsContainer);
+        }
+    </script>
+<script>
+// EMERGENCY MOBILE FIX - Add this right before </body> tag
+setTimeout(function() {
+  console.log("📱 EMERGENCY MOBILE FIX RUNNING");
+  
+  // Force detect mobile
+  const isMobile = true; // Force true for all devices
+  
+  // 1. IMMEDIATELY CHECK IF FEATURES ARE MISSING
+  const missingFeatures = !document.querySelector('.header-buttons');
+  console.log("Missing features detected:", missingFeatures);
+  
+  // 2. DIRECTLY ADD SAVE/LOGOUT BUTTONS - Skip checks that might be failing
+  if (missingFeatures && MemoryDB.currentUser) {
+    console.log("Adding header buttons directly");
+    
+    // Get header
+    const header = document.querySelector('.header');
+    if (header) {
+      // Create buttons container
+      const buttonsContainer = document.createElement('div');
+      buttonsContainer.className = 'header-buttons';
+      buttonsContainer.style.display = 'flex';
+      buttonsContainer.style.marginLeft = '15px';
+      
+      // Add save button
+      const saveButton = document.createElement('div');
+      saveButton.className = 'header-btn save-btn';
+      saveButton.innerHTML = '<i class="fas fa-save"></i>';
+      saveButton.title = 'Save Data';
+      saveButton.style.fontSize = '24px';
+      saveButton.style.color = 'var(--primary-color)';
+      saveButton.style.cursor = 'pointer';
+      saveButton.style.marginRight = '15px';
+      
+      saveButton.addEventListener('click', function() {
+        try {
+          // Direct save to localStorage
+          localStorage.setItem('instacredit_users', JSON.stringify(MemoryDB.users));
+          localStorage.setItem('instacredit_transactions', JSON.stringify(MemoryDB.transactions));
+          
+          // Show notification
+          const notification = document.getElementById('notification');
+          notification.textContent = 'Data saved successfully!';
+          notification.className = 'notification success';
+          notification.style.display = 'block';
+          
+          setTimeout(() => {
+            notification.style.display = 'none';
+          }, 3000);
+        } catch (e) {
+          console.error("Save error:", e);
+        }
+      });
+      
+      // Add logout button
+      const logoutButton = document.createElement('div');
+      logoutButton.className = 'header-btn logout-btn';
+      logoutButton.innerHTML = '<i class="fas fa-sign-out-alt"></i>';
+      logoutButton.title = 'Logout';
+      logoutButton.style.fontSize = '24px';
+      logoutButton.style.color = 'var(--primary-color)';
+      logoutButton.style.cursor = 'pointer';
+      
+      logoutButton.addEventListener('click', function() {
+        MemoryDB.currentUser = null;
+        
+        // Force show auth screen
+        const screens = document.querySelectorAll('.screen');
+        screens.forEach(screen => screen.classList.remove('active'));
+        
+        const authScreen = document.getElementById('authScreen');
+        authScreen.classList.add('active');
+        
+        // Clear login form fields
+        const loginUsername = document.getElementById('loginUsername');
+        const loginPassword = document.getElementById('loginPassword');
+        if (loginUsername) loginUsername.value = '';
+        if (loginPassword) loginPassword.value = '';
+        
+        // Show notification
+        const notification = document.getElementById('notification');
+        notification.textContent = 'Logged out successfully';
+        notification.className = 'notification success';
+        notification.style.display = 'block';
+        
+        setTimeout(() => {
+          notification.style.display = 'none';
+        }, 3000);
+      });
+      
+      // Add buttons to container
+      buttonsContainer.appendChild(saveButton);
+      buttonsContainer.appendChild(logoutButton);
+      
+      // Add container to header
+      header.appendChild(buttonsContainer);
+    }
+  }
+  
+  // 3. FIX TRANSACTIONS NOT SHOWING
+  if (MemoryDB.currentUser) {
+    console.log("Fixing transactions display");
+    
+    // Direct transaction load
+    const transactionsList = document.getElementById('transactionsList');
+    const noTransactions = document.getElementById('noTransactions');
+    
+    if (transactionsList) {
+      // Clear current list
+      transactionsList.innerHTML = '';
+      if (noTransactions) transactionsList.appendChild(noTransactions);
+      
+      // Direct filter for ALL user transactions
+      const userTransactions = MemoryDB.transactions.filter(t => 
+        (t.senderId === MemoryDB.currentUser.username || 
+         t.recipientId === MemoryDB.currentUser.username) &&
+        t.status !== 'cancelled'
+      );
+      
+      console.log(`Found ${userTransactions.length} transactions`);
+      
+      if (userTransactions.length > 0) {
+        if (noTransactions) noTransactions.style.display = 'none';
+        
+        // Create simplified transaction elements
+        userTransactions.forEach(transaction => {
+          const isSent = transaction.senderId === MemoryDB.currentUser.username;
+          
+          const div = document.createElement('div');
+          div.className = 'transaction';
+          
+          const date = new Date(transaction.timestamp);
+          const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+          
+          // Determine transaction type (simplified)
+          let icon, typeClass, partner, amountPrefix;
+          
+          if (transaction.type === 'credit_add') {
+            icon = 'plus-circle';
+            typeClass = 'received';
+            partner = 'Credit System';
+            amountPrefix = '+';
+          } else if (isSent) {
+            icon = 'paper-plane';
+            typeClass = 'sent';
+            partner = transaction.recipientName;
+            amountPrefix = '-';
+          } else {
+            icon = 'download';
+            typeClass = 'received';
+            partner = transaction.senderName;
+            amountPrefix = '+';
+          }
+          
+          // Build HTML directly
+          div.innerHTML = `
+            <div class="transaction-left">
+              <div class="transaction-icon ${typeClass}">
+                <i class="fas fa-${icon}"></i>
+              </div>
+              <div class="transaction-details">
+                <div class="transaction-name">${partner}</div>
+                <div class="transaction-date">${formattedDate}</div>
+              </div>
+            </div>
+            <div class="transaction-amount ${typeClass}">
+              ${amountPrefix} ${transaction.amount} EGP
+            </div>
+          `;
+          
+          transactionsList.appendChild(div);
+        });
+        
+        console.log("Added transactions to DOM");
+      } else {
+        if (noTransactions) noTransactions.style.display = 'block';
+      }
+    }
+  }
+  
+  // 4. ADD REFRESH BUTTON (VISIBLE HELP)
+  if (MemoryDB.currentUser) {
+    const header = document.querySelector('.header');
+    if (header && !document.getElementById('mobileRefreshBtn')) {
+      const refreshBtn = document.createElement('button');
+      refreshBtn.id = 'mobileRefreshBtn';
+      refreshBtn.innerHTML = '⟳';
+      refreshBtn.title = 'Refresh App';
+      refreshBtn.style.marginLeft = '10px';
+      refreshBtn.style.padding = '5px 10px';
+      refreshBtn.style.borderRadius = '5px';
+      refreshBtn.style.background = '#6200ee';
+      refreshBtn.style.color = 'white';
+      refreshBtn.style.border = 'none';
+      refreshBtn.style.fontSize = '16px';
+      
+      refreshBtn.addEventListener('click', function() {
+        window.location.reload(true); // Force reload from server
+      });
+      
+      header.appendChild(refreshBtn);
+    }
+  }
+  
+  console.log("📱 EMERGENCY MOBILE FIX COMPLETED");
+}, 1500); // Run after a small delay to ensure DOM is ready
+</script>
+</body>
+</html>
